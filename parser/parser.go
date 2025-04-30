@@ -34,8 +34,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 	}
 	return program
 }
-
-func (p *Parser) parseStatement() ast.Program {
+func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
@@ -43,6 +42,7 @@ func (p *Parser) parseStatement() ast.Program {
 		return nil
 	}
 }
+
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 	if !p.expectPeek(token.IDENT) {

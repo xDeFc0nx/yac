@@ -8,14 +8,14 @@ import (
 
 func TestLetStatements(t *testing.T) {
 	input := `
-	lej x = 5
-	lej y = 10
-	lej foobar = 838383
+	lej x = 5;
+	lej y = 10;
+	lej foobar = 838383;
 	`
 	l := lexer.New(input)
 	p := New(l)
 
-	program := p.parseProgram()
+	program := p.ParseProgram()
 	if program == nil {
 		t.Fatalf("ParseProgram() returned a nil")
 	}
@@ -44,7 +44,7 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	}
 	letStmt, ok := s.(*ast.LetStatement)
 	if !ok {
-		t.Errorf("s not *ast.LetStatement. got=%q", s)
+		t.Errorf("s not *ast.LetStatement. got=%T", s)
 		return false
 	}
 	if letStmt.Name.Value != name {
@@ -55,6 +55,7 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 		t.Errorf("letStmt.Name.TokenLiteral() not '%s'. got=%s",
 			name, letStmt.Name.TokenLiteral())
 		return false
+
 	}
 	return true
 }
