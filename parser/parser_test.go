@@ -33,13 +33,23 @@ func TestLetStatements(t *testing.T) {
 		{"y"},
 		{"foobar"},
 	}
-	for i, tt := range tests {
-		stmt := program.Statements[i]
+
+	for _, tt := range tests {
+		p := New(l)
+		program := p.ParseProgram()
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+				len(program.Statements))
+		}
+
+		stmt := program.Statements[0]
 		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
 			return
 		}
 	}
 }
+
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "lej" {
 		t.Errorf("s.TokenLiteral not 'lej'. got=%q", s.TokenLiteral())
