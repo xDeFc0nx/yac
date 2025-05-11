@@ -2,17 +2,24 @@ package parser
 
 import (
 	"fmt"
+
 	"github.com/xDeFc0nx/yac/ast"
 	"github.com/xDeFc0nx/yac/lexer"
 	"github.com/xDeFc0nx/yac/token"
 )
 
 type Parser struct {
-	l         *lexer.Lexer
-	errors    []string
-	curToken  token.Token
-	peekToken token.Token
+	l             *lexer.Lexer
+	errors        []string
+	curToken      token.Token
+	peekToken     token.Token
+	prefixParseFn map[token.TokenType]prefixParseFn
+	infixParseFn  map[token.TokenType]infixParseFn
 }
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
 
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l: l,
@@ -95,4 +102,12 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 
 	}
 
+}
+
+func (p *Parser) registerPrefix(tokeType token.TokenType, fn prefixParseFn) {
+	p.prefixParseFn[tokeType] = fn
+
+}
+func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
+	p.infixParseFn[tokenType] = fn
 }
